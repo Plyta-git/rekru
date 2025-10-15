@@ -12,7 +12,10 @@
   "author": "MasterBorn",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "^5.0.1",
+    "express-validator": "^7.1.0",
+    "multer": "^1.4.5-lts.1",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
   },

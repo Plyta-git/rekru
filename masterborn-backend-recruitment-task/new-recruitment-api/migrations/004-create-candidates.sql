@@ -10,5 +10,5 @@ CREATE TABLE Candidate (
     consent_date TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     CHECK (experience_years >= 0),
-    CHECK (recruitment_status IN ('nowy', 'w trakcie rozmów', 'zaakceptowany', 'odrzucony'))
+    CHECK (recruitment_status IN ('nowy', 'w trakcie rozmow', 'zaakceptowany', 'odrzucony'))
 );
