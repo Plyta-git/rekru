@@ -244,6 +244,32 @@ export class CandidatesService {
     );
   }
 
+  async getCandidates(page: number, limit: number) {
+    const offset = (page - 1) * limit;
+    const [totalItems, candidates] = await Promise.all([
+      this.repository.countCandidates(),
+      this.repository.findCandidatesPaginated(limit, offset),
+    ]);
+
+    const totalPages = limit > 0 ? Math.ceil(totalItems / limit) : 0;
+
+    return {
+      data: candidates.map((candidate: CandidateRow) => ({
+        id: candidate.id,
+        firstName: candidate.first_name,
+        lastName: candidate.last_name,
+        email: candidate.email,
+        createdAt: candidate.created_at,
+      })),
+      meta: {
+        page,
+        limit,
+        totalItems,
+        totalPages,
+      },
+    };
+  }
+
   private resolveLegacyApiDetails() {
     const legacyApiUrl =
       this.config.legacyApiUrl ??

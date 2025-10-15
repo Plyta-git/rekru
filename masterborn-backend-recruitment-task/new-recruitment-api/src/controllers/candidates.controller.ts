@@ -27,11 +27,26 @@ export class CandidatesController {
   ];
 
   constructor(private readonly candidatesService: CandidatesService) {
+    this.router.get("/candidates", this.list.bind(this));
     this.router.post(
       "/candidates",
       ...this.validators,
       this.create.bind(this)
     );
+  }
+
+  async list(req: Request, res: Response) {
+    const page = Number.parseInt(String(req.query.page ?? "1"), 10);
+    const limit = Number.parseInt(String(req.query.limit ?? "10"), 10);
+    const normalizedPage = Number.isNaN(page) || page < 1 ? 1 : page;
+    const normalizedLimit = Number.isNaN(limit) || limit < 1 ? 10 : limit;
+
+    const result = await this.candidatesService.getCandidates(
+      normalizedPage,
+      normalizedLimit
+    );
+
+    return res.json(result);
   }
 
   async create(req: Request, res: Response) {

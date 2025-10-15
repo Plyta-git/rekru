@@ -32,6 +32,10 @@ const INSERT_CANDIDATE_JOB_OFFER_QUERY = loadQuery(
   "insert_candidate_job_offer.sql"
 );
 const FIND_CANDIDATE_BY_ID_QUERY = loadQuery("find_candidate_by_id.sql");
+const FIND_CANDIDATES_PAGINATED_QUERY = loadQuery(
+  "find_candidates_paginated.sql"
+);
+const COUNT_CANDIDATES_QUERY = loadQuery("count_candidates.sql");
 
 export type CandidateRow = {
   id: number;
@@ -102,5 +106,18 @@ export class CandidatesRepository {
 
   findCandidateById(id: number) {
     return this.db.get<CandidateRow>(FIND_CANDIDATE_BY_ID_QUERY, id);
+  }
+
+  findCandidatesPaginated(limit: number, offset: number): Promise<CandidateRow[]> {
+    return this.db.all(
+      FIND_CANDIDATES_PAGINATED_QUERY,
+      limit,
+      offset
+    ) as Promise<CandidateRow[]>;
+  }
+
+  async countCandidates() {
+    const row = await this.db.get<{ count: number }>(COUNT_CANDIDATES_QUERY);
+    return row?.count ?? 0;
   }
 }
