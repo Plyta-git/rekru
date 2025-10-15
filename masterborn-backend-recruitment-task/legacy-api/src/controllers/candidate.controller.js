@@ -64,5 +64,6 @@ export const addCandidate = (req, res) => {
   res
     .status(201)
     .json({ message: "Candidate added successfully", candidate: newCandidate });
+  console.log(req.body);
   return;
 };

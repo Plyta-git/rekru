@@ -1,21 +1,31 @@
 import express from "express";
 import type { Database } from "sqlite";
 import type sqlite3 from "sqlite3";
-import { CandidatesController } from "./candidates.controller";
+import { createCandidatesRouter } from "./routes/candidates.routes";
+import { CandidatesRepository } from "./repositories/candidates.repository";
+import { CandidatesService } from "./services/candidates.service";
 
 type AppConfig = {
-    legacyApiKey?: string;
+  legacyApiKey?: string;
+  legacyApiUrl?: string;
 };
 
 export const setupApp = async (
-    db: Database<sqlite3.Database, sqlite3.Statement>,
-    config: AppConfig = {}
+  db: Database<sqlite3.Database, sqlite3.Statement>,
+  config: AppConfig = {}
 ) => {
-    const app = express();
+  const app = express();
 
-    app.use(express.json());
+  app.use(express.json());
 
-    app.use(new CandidatesController(db, config.legacyApiKey).router);
+  const candidatesRepository = new CandidatesRepository(db);
+  const candidatesService = new CandidatesService(candidatesRepository, {
+    expectedApiKey: config.legacyApiKey,
+    legacyApiKey: config.legacyApiKey,
+    legacyApiUrl: config.legacyApiUrl,
+  });
 
-    return app;
-}
+  app.use(createCandidatesRouter(candidatesService));
+
+  return app;
+};

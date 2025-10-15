@@ -1,0 +1,1 @@
+SELECT id FROM JobOffer WHERE id IN (__PLACEHOLDERS__)
