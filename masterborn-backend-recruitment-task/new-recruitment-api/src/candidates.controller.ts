@@ -47,8 +47,6 @@ export class CandidatesController {
   }
 
   async create(req: Request, res: Response) {
-    console.log(req);
-
     if (!this.isAuthorized(req.header("x-api-key"))) {
       return res.status(403).json({ message: "Forbidden: Invalid API Key." });
     }
